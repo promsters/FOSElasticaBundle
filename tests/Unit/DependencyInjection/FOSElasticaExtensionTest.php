@@ -27,28 +27,6 @@ use Symfony\Component\Yaml\Yaml;
 
 class FOSElasticaExtensionTest extends TestCase
 {
-    public function testShouldAddParentParamToObjectPersisterCall()
-    {
-        $config = Yaml::parse(file_get_contents(__DIR__.'/fixtures/config.yml'));
-
-        $containerBuilder = new ContainerBuilder();
-        $containerBuilder->setParameter('kernel.debug', true);
-
-        $extension = new FOSElasticaExtension();
-
-        $extension->load($config, $containerBuilder);
-
-        $this->assertTrue($containerBuilder->hasDefinition('fos_elastica.object_persister.test_index.child_field'));
-
-        $persisterCallDefinition = $containerBuilder->getDefinition('fos_elastica.object_persister.test_index.child_field');
-
-        $arguments = $persisterCallDefinition->getArguments();
-        $arguments = $arguments['index_3'];
-
-        $this->assertArrayHasKey('_parent', $arguments);
-        $this->assertSame('parent_field', $arguments['_parent']['type']);
-    }
-
     public function testExtensionSupportsDriverlessTypePersistence()
     {
         $config = Yaml::parse(file_get_contents(__DIR__.'/fixtures/driverless_type.yml'));

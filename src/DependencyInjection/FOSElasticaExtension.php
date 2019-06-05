@@ -145,6 +145,7 @@ class FOSElasticaExtension extends Extension
 
             $clientDef = new ChildDefinition('fos_elastica.client_prototype');
             $clientDef->replaceArgument(0, $clientConfig);
+            $clientDef->replaceArgument(1, null);
 
             $logger = $clientConfig['connections'][0]['logger'];
             if (false !== $logger) {
@@ -326,7 +327,6 @@ class FOSElasticaExtension extends Extension
                 'properties',
                 '_all',
                 '_id',
-                '_parent',
                 '_routing',
                 '_source',
             ] as $field) {
@@ -356,11 +356,6 @@ class FOSElasticaExtension extends Extension
                 $this->loadTypePersistenceIntegration($type['persistence'], $container, new Reference($typeId), $indexName, $name);
 
                 $typeConfig['persistence'] = $type['persistence'];
-            }
-
-            if (isset($type['_parent'])) {
-                // _parent mapping cannot contain `property` and `identifier`, so removing them after building `persistence`
-                unset($indexConfig['types'][$name]['mapping']['_parent']['property'], $indexConfig['types'][$name]['mapping']['_parent']['identifier']);
             }
 
             if (isset($type['indexable_callback'])) {
@@ -546,9 +541,6 @@ class FOSElasticaExtension extends Extension
             $abstractId = 'fos_elastica.object_persister';
             $mapping = $this->indexConfigs[$indexName]['types'][$typeName]['mapping'];
             $argument = $mapping['properties'];
-            if (isset($mapping['_parent'])) {
-                $argument['_parent'] = $mapping['_parent'];
-            }
             $arguments[] = $argument;
         }
 

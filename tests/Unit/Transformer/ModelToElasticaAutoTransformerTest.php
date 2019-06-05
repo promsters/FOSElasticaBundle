@@ -414,46 +414,6 @@ class ModelToElasticaAutoTransformerTest extends TestCase
         );
     }
 
-    public function testParentMapping()
-    {
-        $transformer = $this->getTransformer();
-        $document = $transformer->transform(new POPO3(), [
-            '_parent' => ['type' => 'upper', 'property' => 'upper', 'identifier' => 'id'],
-        ]);
-
-        $this->assertSame('parent', $document->getParent());
-    }
-
-    public function testParentMappingWithCustomIdentifier()
-    {
-        $transformer = $this->getTransformer();
-        $document = $transformer->transform(new POPO3(), [
-            '_parent' => ['type' => 'upper', 'property' => 'upper', 'identifier' => 'name'],
-        ]);
-
-        $this->assertSame('a random name', $document->getParent());
-    }
-
-    public function testParentMappingWithNullProperty()
-    {
-        $transformer = $this->getTransformer();
-        $document = $transformer->transform(new POPO3(), [
-            '_parent' => ['type' => 'upper', 'property' => null, 'identifier' => 'id'],
-        ]);
-
-        $this->assertSame('parent', $document->getParent());
-    }
-
-    public function testParentMappingWithCustomProperty()
-    {
-        $transformer = $this->getTransformer();
-        $document = $transformer->transform(new POPO3(), [
-            '_parent' => ['type' => 'upper', 'property' => 'upperAlias', 'identifier' => 'id'],
-        ]);
-
-        $this->assertSame('parent', $document->getParent());
-    }
-
     public function testThatMappedObjectsDontNeedAnIdentifierField()
     {
         $transformer = $this->getTransformer();
