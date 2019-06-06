@@ -31,6 +31,7 @@ class ObjectPersister implements ObjectPersisterInterface
     protected $fields;
     protected $logger;
     private $options;
+    private $index;
 
     /**
      * @param Type                                $type
@@ -45,6 +46,7 @@ class ObjectPersister implements ObjectPersisterInterface
         $this->objectClass = $objectClass;
         $this->fields = $fields;
         $this->options = $options;
+        $this->index = $this->type->getIndex();
     }
 
     /**
@@ -105,7 +107,7 @@ class ObjectPersister implements ObjectPersisterInterface
             $documents[] = $this->transformToElasticaDocument($object);
         }
         try {
-            $this->type->addDocuments($documents, $this->options);
+            $this->index->addDocuments($documents, $this->options);
         } catch (BulkException $e) {
             $this->log($e);
         }
@@ -124,7 +126,7 @@ class ObjectPersister implements ObjectPersisterInterface
         }
 
         try {
-            $this->type->updateDocuments($documents, $this->options);
+            $this->index->updateDocuments($documents, $this->options);
         } catch (BulkException $e) {
             $this->log($e);
         }
@@ -140,7 +142,7 @@ class ObjectPersister implements ObjectPersisterInterface
             $documents[] = $this->transformToElasticaDocument($object);
         }
         try {
-            $this->type->deleteDocuments($documents);
+            $this->index->deleteDocuments($documents);
         } catch (BulkException $e) {
             $this->log($e);
         }
@@ -152,7 +154,7 @@ class ObjectPersister implements ObjectPersisterInterface
     public function deleteManyByIdentifiers(array $identifiers, $routing = false)
     {
         try {
-            $this->type->deleteIds($identifiers, $routing);
+            $this->index->getClient()->deleteIds($identifiers, $this->index, $this, $routing);
         } catch (BulkException $e) {
             $this->log($e);
         }
