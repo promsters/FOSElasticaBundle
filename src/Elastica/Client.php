@@ -14,6 +14,7 @@ namespace FOS\ElasticaBundle\Elastica;
 use Elastica\Client as BaseClient;
 use Elastica\Exception\ClientException;
 use Elastica\Request;
+use Elastica\Response;
 use FOS\ElasticaBundle\Logger\ElasticaLogger;
 use Symfony\Component\Stopwatch\Stopwatch;
 
@@ -49,7 +50,7 @@ class Client extends BaseClient
     /**
      * {@inheritdoc}
      */
-    public function request($path, $method = Request::GET, $data = [], array $query = [], $contentType = Request::DEFAULT_CONTENT_TYPE)
+    public function request(string $path, string $method = Request::GET, $data = [], array $query = [], string $contentType = Request::DEFAULT_CONTENT_TYPE): Response
     {
         if ($this->stopwatch) {
             $this->stopwatch->start('es_request', 'fos_elastica');
@@ -86,7 +87,7 @@ class Client extends BaseClient
      *
      * @return Index|mixed
      */
-    public function getIndex($name)
+    public function getIndex(string $name): \Elastica\Index
     {
         if (isset($this->indexCache[$name])) {
             return $this->indexCache[$name];
