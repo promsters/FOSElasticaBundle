@@ -87,3 +87,4 @@ final class RegisterPersistersPass implements CompilerPassInterface
         }
     }
 }
+
